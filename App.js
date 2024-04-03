@@ -1,71 +1,72 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TextInput, Button, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TextInput, Button, ScrollView, FlatList } from 'react-native';
 import { useState } from 'react';
+import GoalInput from './components/GoalInput';
+import GoalText from './components/GoalText';
 
 
 export default function App() {
 
-  const [goalText, setGoalText] = useState({});
+  const [goalText, setGoalText] = useState("");
   const [listOfGoals, updateListOfGoals] = useState([]);
+  const [inputVisible, setInputVisible] = useState(false);
 
   function onChangeTextEventHandler(inputText) {
-    setGoalText({key: Math.random().toString(), value: inputText});
-    console.log(inputText);
+    setGoalText(inputText);
   }
 
   function onPressEventHandler() {
-      updateListOfGoals(goals => [...goals, goalText]);
-      console.log(listOfGoals);
+      updateListOfGoals(goals => [...goals, { id: Math.random().toString(), text: goalText }]);
+      setInputVisible(false);
+  }
+
+  function onPressGoalEventHandler(id) {
+    console.log(id);
+    updateListOfGoals(goals => goals.filter(item => item.id !== id));
+  }
+
+  function onPressCancelEventHandler() {
+    setInputVisible(false);
   }
 
   return (
+    <>
+      <StatusBar hidden />
       <View style={styles.container}>
-        <StatusBar hidden></StatusBar>
-        <View style={styles.inputContainer}>
-          <TextInput onChangeText={onChangeTextEventHandler} style={styles.inputText} placeholder='Add your goal...'/>
-          <View style={styles.inputButtonContainer}>
-            <Button onPress={onPressEventHandler} title='Add'/>
-          </View>
-          
+        <View style={{alignItems: 'center'}}>
+          <Image style={styles.image} source={require("./assets/images/goal.png")}/>
         </View>
-        <ScrollView style={{padding: 5}}>
-          { listOfGoals.map(goalItem => (<View style={styles.goalItemContainer}><Text style={styles.goalText} key={goalItem.key}>{goalItem.value}</Text></View>)) }
-         
-        </ScrollView>
+      
+        <Button title='Add goal' onPress={() => setInputVisible(true)} />
+        <GoalInput
+          onChangeTextEventHandler={onChangeTextEventHandler}
+          onPressEventHandler={onPressEventHandler}
+          visible={inputVisible}
+          onPressCancelEventHandler={onPressCancelEventHandler}
+        />
+        <FlatList
+          data={listOfGoals}
+          renderItem={({ item, index }) => (
+            <GoalText item={item} onPressEventHandler={onPressGoalEventHandler} />
+          )}
+          keyExtractor={item => item.id}
+        />
+        
       </View>
+    </>
   );
 }
 
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
-  },
-  inputContainer: {
-    flexDirection: "row",
-    padding: 10
-  },
-  inputText: {
-    flex: 6,
-    borderWidth: 1,
-    borderColor: "#cccccc"
-  },
-  inputButtonContainer: {
     flex: 1,
-    marginLeft: 3,
-    backgroundColor: "red"
+    padding: 6,
+    backgroundColor: "#7831E0",
   },
-  goalItemContainer: {
-    backgroundColor: "#2FDDF5",
-    margin: 2,
-    borderRadius: 6,
-    width: "60%",
-    padding: 3,
-  },
-  goalText: {
-    color: "white",
-    textAlignVertical: "center",
-    padding: 4,
+  image: {
+    width: 100,
+    height: 100,
   }
 });
 
