@@ -1,73 +1,114 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, TextInput, Button, ScrollView, FlatList } from 'react-native';
+import { StyleSheet, ImageBackground } from 'react-native';
+import { LinearGradient } from "expo-linear-gradient";
 import { useState } from 'react';
-import GoalInput from './components/GoalInput';
-import GoalText from './components/GoalText';
+import StartGameScreen from './screens/StartGameScreen';
+import GameScreen from './screens/GameScreen';
 
 
 export default function App() {
 
-  const [goalText, setGoalText] = useState("");
-  const [listOfGoals, updateListOfGoals] = useState([]);
-  const [inputVisible, setInputVisible] = useState(false);
+  const [userNumber, setUserNumber] = useState();
+  
 
-  function onChangeTextEventHandler(inputText) {
-    setGoalText(inputText);
+  function numberSelectedHandler(selectedNumber) {
+    setUserNumber(selectedNumber);
   }
 
-  function onPressEventHandler() {
-      updateListOfGoals(goals => [...goals, { id: Math.random().toString(), text: goalText }]);
-      setInputVisible(false);
-  }
 
-  function onPressGoalEventHandler(id) {
-    console.log(id);
-    updateListOfGoals(goals => goals.filter(item => item.id !== id));
-  }
+  let currentScreen = <StartGameScreen onNumberSelected={numberSelectedHandler}/>;
 
-  function onPressCancelEventHandler() {
-    setInputVisible(false);
-  }
 
+  if (userNumber) {
+    currentScreen = <GameScreen/>;
+  }
+  
   return (
-    <>
-      <StatusBar hidden />
-      <View style={styles.container}>
-        <View style={{alignItems: 'center'}}>
-          <Image style={styles.image} source={require("./assets/images/goal.png")}/>
-        </View>
-      
-        <Button title='Add goal' onPress={() => setInputVisible(true)} />
-        <GoalInput
-          onChangeTextEventHandler={onChangeTextEventHandler}
-          onPressEventHandler={onPressEventHandler}
-          visible={inputVisible}
-          onPressCancelEventHandler={onPressCancelEventHandler}
-        />
-        <FlatList
-          data={listOfGoals}
-          renderItem={({ item, index }) => (
-            <GoalText item={item} onPressEventHandler={onPressGoalEventHandler} />
-          )}
-          keyExtractor={item => item.id}
-        />
-        
-      </View>
-    </>
+    <LinearGradient style={styles.rootComponent} colors={["#FBF4DE", "#FABF06"]}>
+      <ImageBackground
+      source={require("./assets/images/background.jpg")}
+      resizeMode='cover'
+      style={styles.rootComponent}
+      imageStyle={styles.backgroundImage}>
+        {currentScreen}
+      </ImageBackground>
+    </LinearGradient>
   );
 }
 
-
 const styles = StyleSheet.create({
-  container: {
+  rootComponent: {
     flex: 1,
-    padding: 6,
-    backgroundColor: "#7831E0",
   },
-  image: {
-    width: 100,
-    height: 100,
+  backgroundImage: {
+    opacity: 0.15,
   }
 });
+
+// export default function App() {
+
+//   const [goalText, setGoalText] = useState({});
+//   const [listOfGoals, updateListOfGoals] = useState([]);
+
+//   function onChangeTextEventHandler(inputText) {
+//     setGoalText({key: Math.random().toString(), value: inputText});
+//     console.log(inputText);
+//   }
+
+//   function onPressEventHandler() {
+//       updateListOfGoals(goals => [...goals, goalText]);
+//       console.log(listOfGoals);
+//   }
+
+//   return (
+//       <View style={styles.container}>
+//         <StatusBar hidden></StatusBar>
+//         <View style={styles.inputContainer}>
+//           <TextInput onChangeText={onChangeTextEventHandler} style={styles.inputText} placeholder='Add your goal...'/>
+//           <View style={styles.inputButtonContainer}>
+//             <Button onPress={onPressEventHandler} title='Add'/>
+//           </View>
+          
+//         </View>
+//         <ScrollView style={{padding: 5}}>
+//           { listOfGoals.map(goalItem => (<View style={styles.goalItemContainer}><Text style={styles.goalText} key={goalItem.key}>{goalItem.value}</Text></View>)) }
+         
+//         </ScrollView>
+//       </View>
+//   );
+// }
+
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1
+//   },
+//   inputContainer: {
+//     flexDirection: "row",
+//     padding: 10
+//   },
+//   inputText: {
+//     flex: 6,
+//     borderWidth: 1,
+//     borderColor: "#cccccc"
+//   },
+//   inputButtonContainer: {
+//     flex: 1,
+//     marginLeft: 3,
+//     backgroundColor: "red"
+//   },
+//   goalItemContainer: {
+//     backgroundColor: "#2FDDF5",
+//     margin: 2,
+//     borderRadius: 6,
+//     width: "60%",
+//     padding: 3,
+//   },
+//   goalText: {
+//     color: "white",
+//     textAlignVertical: "center",
+//     padding: 4,
+//   }
+// });
 
 
