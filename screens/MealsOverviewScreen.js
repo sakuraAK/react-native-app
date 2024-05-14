@@ -6,15 +6,15 @@ import { useEffect, useLayoutEffect } from "react";
 export default function MealsOverviewScreen({ route, navigation }) {
     const categoryId = route.params.categoryId;
 
-    // useEffect(() => {
-    //     const categoryTitle = CATEGORIES.find(
-    //       (category) => category.id === categoryId
-    //     ).title;
+    useLayoutEffect(() => {
+        const categoryTitle = CATEGORIES.find(
+          (category) => category.id === categoryId
+        ).title;
     
-    //     navigation.setOptions({
-    //       title: categoryTitle,
-    //     });
-    //   }, [categoryId, navigation]);
+        navigation.setOptions({
+          title: categoryTitle,
+        });
+      }, [categoryId, navigation]);
 
     return (
         <View>
