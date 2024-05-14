@@ -1,7 +1,7 @@
 import { MEALS, CATEGORIES } from "../data/dummy-data";
 import { View, Text, List, FlatList} from "react-native";
 import { useEffect, useLayoutEffect } from "react";
-import MealItem from "../components/MealDetails";
+import MealItem from "../components/MealItem";
 
 
 export default function MealsOverviewScreen({ route, navigation }) {
@@ -24,7 +24,14 @@ export default function MealsOverviewScreen({ route, navigation }) {
            <FlatList
                 data={meals}
                 keyExtractor={item => item.id}
-                renderItem={itemData => (<Text>{itemData.item.title}</Text>)}
+                renderItem={itemData => (
+                <MealItem 
+                  title={itemData.item.title} 
+                  imageURL={itemData.item.imageUrl}
+                  duration={itemData.item.duration}
+                  affordability={itemData.item.affordability}
+                  complexity={itemData.item.complexity}
+                  />)}
            />
         </View>
     );

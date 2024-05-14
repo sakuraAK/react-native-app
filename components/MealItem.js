@@ -7,7 +7,7 @@ import {
     Platform,
   } from 'react-native';
   
-  function MealItem() {
+  function MealItem({title, imageURL, duration, affordability, complexity}) {
     return (
       <View style={styles.mealItem}>
         <Pressable
@@ -16,13 +16,13 @@ import {
         >
           <View style={styles.innerContainer}>
             <View>
-              <Image/>
-              <Text style={styles.title}></Text>
+              <Image  source={{uri: imageURL}} style={styles.image}/>
+              <Text style={styles.title}>{title}</Text>
             </View>
             <View style={styles.details}>
-              <Text style={styles.detailItem}> m</Text>
-              <Text style={styles.detailItem}></Text>
-              <Text style={styles.detailItem}></Text>
+              <Text style={styles.detailItem}>{duration}m</Text>
+              <Text style={styles.detailItem}>{affordability}</Text>
+              <Text style={styles.detailItem}>{complexity}</Text>
             </View>
           </View>
         </Pressable>
