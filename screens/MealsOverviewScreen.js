@@ -9,8 +9,8 @@ export default function MealsOverviewScreen({ route, navigation }) {
 
     const meals = MEALS.filter(meal => meal.categoryIds.indexOf(categoryId) !== -1);
 
-    function onMealItemPressHandler() {
-       //todo
+    function onMealItemPressHandler(mealId) {
+       navigation.navigate('MealDetails', {mealId: mealId});
     }
 
 
@@ -36,7 +36,7 @@ export default function MealsOverviewScreen({ route, navigation }) {
                   duration={itemData.item.duration}
                   affordability={itemData.item.affordability}
                   complexity={itemData.item.complexity}
-                  onPressHandler={onMealItemPressHandler}
+                  onPressHandler={() => onMealItemPressHandler(itemData.item.id)}
                   />)}
            />
         </View>
