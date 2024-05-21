@@ -1,87 +1,89 @@
-import { TextInput, View, StyleSheet, Alert} from "react-native";
-import PrimaryButton from "../components/PrimaryButton";
-import { useState } from "react";
+import { useState } from 'react';
+import { TextInput, View, StyleSheet, Alert } from 'react-native';
 
-export default function StartGameScreen({onNumberSelected}) {
+import PrimaryButton from '../components/ui/PrimaryButton.js';
+import Title from '../components/ui/Title';
+import Colors from '../constants/colors';
+import Card from '../components/ui/Card';
+import InstructionText from '../components/ui/InstructionText';
 
-    const [enteredNumber, setEnteredNumber] = useState("");
+function StartGameScreen({ onPickNumber }) {
+  const [enteredNumber, setEnteredNumber] = useState('');
 
-    function numberConfirmedHandler() {
-        //test value is a number between 1-99
-        const chosenNumber = parseInt(enteredNumber);
+  function numberInputHandler(enteredText) {
+    setEnteredNumber(enteredText);
+  }
 
-        if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
-            Alert.alert("Invalid number",
-            "Number has to be an integer bewteen 1-99",
-            [{text: "Ok", style: "destructive", onPress: numberResetHandler}]);
-            return;
-        }
+  function resetInputHandler() {
+    setEnteredNumber('');
+  }
 
-        onNumberSelected(chosenNumber);
+  function confirmInputHandler() {
+    const chosenNumber = parseInt(enteredNumber);
 
+    if ({/*todo: add boolean expression to implement user input vlidation (integer number between 1-99)*/}) {
+      Alert.alert(
+        'Invalid number!',
+        'Number has to be a number between 1 and 99.',
+        [{ text: 'Okay', style: 'destructive', onPress: resetInputHandler }]
+      );
+      return;
     }
 
-    function numberResetHandler() {
-        setEnteredNumber("");
-    }
+    onPickNumber(chosenNumber);
+  }
 
-    function numberChangedHandler(enteredText) {
-        setEnteredNumber(enteredText);
-    }
-
-
-
-    return (
-        <View style={styles.inputContainer}>
-            <TextInput 
-                style={styles.numberInput} 
-                maxLength={2} 
-                keyboardType="number-pad"
-                autoCapitalize="none"
-                autoCorrect={false} 
-                value={enteredNumber}
-                onChangeText={numberChangedHandler}   
-                />
-            <View style={styles.buttonsContainer}>
-                <View style={styles.buttonContain}>
-                    <PrimaryButton onPress={numberResetHandler}>Reset</PrimaryButton>
-                </View>
-                <View style={styles.buttonContain}>
-                    <PrimaryButton onPress={numberConfirmedHandler}>Confirm</PrimaryButton>
-                </View>
-            </View>
+  return (
+    <View style={styles.rootContainer}>
+      <Title>Guess My Number</Title>
+      <Card>
+        <InstructionText>
+          Enter a Number
+        </InstructionText>
+        <TextInput
+          style={styles.numberInput}
+          /*todo: add properties to limit the input size and type of input*/
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={numberInputHandler}
+          value={enteredNumber}
+        />
+        <View style={styles.buttonsContainer}>
+          <View style={styles.buttonContainer}>
+            {/*todo: use PrimaryButton component to add reset button. Use resetInputHandler. */}
+          </View>
+          <View style={styles.buttonContainer}>
+            {/*todo: use PrimaryButton component to add confirm button. Use confirmInputHandler. */}
+          </View>
         </View>
-    );
-
-    
+      </Card>
+    </View>
+  );
 }
 
+export default StartGameScreen;
+
 const styles = StyleSheet.create({
-    inputContainer: {
-        marginTop: 100,
-        marginHorizontal: 24,
-        padding: 16,
-        backgroundColor: '#4e0329',
-        elevation: 10,
-        alignItems: 'center',
-        borderRadius: 8,
-
-    },
-    numberInput: {
-        height: 50,
-        width: 50,
-        borderBottomColor: "#DDB52F",
-        borderBottomWidth: 2,
-        color: "#DDB52F",
-        fontSize: 32,
-        fontWeight: 'bold',
-        textAlign: 'center'
-    },
-    buttonsContainer: {
-        flexDirection: 'row',
-
-    },
-    buttonContain: {
-        flex: 1,
-    }
+  rootContainer: {
+    flex: 1,
+    marginTop: 100,
+    alignItems: 'center',
+  },
+  numberInput: {
+    height: 50,
+    width: 50,
+    fontSize: 32,
+    borderBottomColor: Colors.accent500,
+    borderBottomWidth: 2,
+    color: Colors.accent500,
+    marginVertical: 8,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  buttonsContainer: {
+    flexDirection: 'row',
+  },
+  buttonContainer: {
+    flex: 1,
+  },
 });

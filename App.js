@@ -1,129 +1,72 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, ImageBackground, SafeAreaView } from 'react-native';
-import { LinearGradient } from "expo-linear-gradient";
 import { useState } from 'react';
+import { StyleSheet, ImageBackground, SafeAreaView } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+
 import StartGameScreen from './screens/StartGameScreen';
 import GameScreen from './screens/GameScreen';
 import GameOverScreen from './screens/GameOverScreen';
-
-let currentScreen = null;
+import Colors from './constants/colors';
 
 export default function App() {
+  const [userNumber, setUserNumber] = useState(); 
+  const [gameIsOver, setGameIsOver] = useState(true); 
+  const [guessRounds, setGuessRounds] = useState(0); 
 
-  const [userNumber, setUserNumber] = useState();
-  const [isGameOver, setGameOver] = useState(false);
-  
 
-  function numberSelectedHandler(selectedNumber) {
-    setUserNumber(selectedNumber);
-    setGameOver(false);
+  function pickedNumberHandler(pickedNumber) {
+    setUserNumber(pickedNumber);
+    setGameIsOver(false);
   }
 
-  function onGameOverHandler() {
-      setGameOver(true);
+  function gameOverHandler(numberOfRounds) {
+    setGameIsOver(true);
+    setGuessRounds(numberOfRounds);
   }
 
-  function onResetHandler() {
+  function startNewGameHandler() {
     setUserNumber(null);
+    setGuessRounds(0);
   }
 
-  currentScreen = <StartGameScreen onNumberSelected={numberSelectedHandler}/>;
-
+  let screen = (<StartGameScreen onPickNumber={pickedNumberHandler} />);
 
   if (userNumber) {
-    currentScreen = <GameScreen selectedNumber={userNumber} onGameOver={onGameOverHandler}/>;
+    screen = ({/*todo: use GameScreen component to add navigation to that screen when number selected*/});
   }
 
-  if (userNumber && isGameOver) {
-    currentScreen = <GameOverScreen onReset={onResetHandler}/>;
+  if ({/*todo: add boolean expression to cnotrol proper transition*/}) {
+    screen = (
+      <GameOverScreen
+        userNumber={userNumber}
+        roundsNumber={guessRounds}
+        onStartNewGame={startNewGameHandler}
+      />
+    );
   }
-  
+
   return (
-    <LinearGradient style={styles.rootComponent} colors={["#FBF4DE", "#FABF06"]}>
+    <LinearGradient
+      colors={[Colors.primary700, Colors.accent500]}
+      style={styles.rootScreen}
+    >
       <ImageBackground
-      source={require("./assets/images/background.jpg")}
-      resizeMode='cover'
-      style={styles.rootComponent}
-      imageStyle={styles.backgroundImage}>
-        <SafeAreaView style={styles.rootComponent}>{currentScreen}</SafeAreaView>
+        source={require('./assets/images/background.png')}
+        resizeMode="cover"
+        style={styles.rootScreen}
+        imageStyle={styles.backgroundImage}
+      >
+        <SafeAreaView style={styles.rootScreen}>{screen}</SafeAreaView>
       </ImageBackground>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
-  rootComponent: {
+  rootScreen: {
     flex: 1,
+    paddingTop: 10,
   },
   backgroundImage: {
     opacity: 0.15,
-  }
+  },
 });
-
-// export default function App() {
-
-//   const [goalText, setGoalText] = useState({});
-//   const [listOfGoals, updateListOfGoals] = useState([]);
-
-//   function onChangeTextEventHandler(inputText) {
-//     setGoalText({key: Math.random().toString(), value: inputText});
-//     console.log(inputText);
-//   }
-
-//   function onPressEventHandler() {
-//       updateListOfGoals(goals => [...goals, goalText]);
-//       console.log(listOfGoals);
-//   }
-
-//   return (
-//       <View style={styles.container}>
-//         <StatusBar hidden></StatusBar>
-//         <View style={styles.inputContainer}>
-//           <TextInput onChangeText={onChangeTextEventHandler} style={styles.inputText} placeholder='Add your goal...'/>
-//           <View style={styles.inputButtonContainer}>
-//             <Button onPress={onPressEventHandler} title='Add'/>
-//           </View>
-          
-//         </View>
-//         <ScrollView style={{padding: 5}}>
-//           { listOfGoals.map(goalItem => (<View style={styles.goalItemContainer}><Text style={styles.goalText} key={goalItem.key}>{goalItem.value}</Text></View>)) }
-         
-//         </ScrollView>
-//       </View>
-//   );
-// }
-
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1
-//   },
-//   inputContainer: {
-//     flexDirection: "row",
-//     padding: 10
-//   },
-//   inputText: {
-//     flex: 6,
-//     borderWidth: 1,
-//     borderColor: "#cccccc"
-//   },
-//   inputButtonContainer: {
-//     flex: 1,
-//     marginLeft: 3,
-//     backgroundColor: "red"
-//   },
-//   goalItemContainer: {
-//     backgroundColor: "#2FDDF5",
-//     margin: 2,
-//     borderRadius: 6,
-//     width: "60%",
-//     padding: 3,
-//   },
-//   goalText: {
-//     color: "white",
-//     textAlignVertical: "center",
-//     padding: 4,
-//   }
-// });
-
-
